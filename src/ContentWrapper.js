@@ -6,12 +6,13 @@ const Wrapper = styled.div`
   width: ${(props) => props.maxWidth};
   height: calc(100vh * 0.65);
   & > * {
-    padding-left: 35px;
+    padding: 0px 35px;
   }
+  overflow-y: auto;
 `;
 
 const Title = styled.div`
-  margin: 35px 0px;
+  margin-top: 35px;
   font-size: 25px;
   font-weight: bold;
 `;

@@ -3,6 +3,8 @@ import styled from 'styled-components';
 import { debounce } from 'debounce';
 
 import ContentWrapper from './ContentWrapper';
+import MovieResults from './MovieResults';
+import Nominations from './Nominations';
 
 const Title = styled.div`
   font-size: 50px;
@@ -65,9 +67,56 @@ const InputItem = styled.div`
 const MainPage = () => {
   const apiRef = useRef(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [results, setResults] = useState([]);
   const [nominations, setNominations] = useState([]);
+  const [nominatedIds, setNominatedIds] = useState([]);
 
-  const handleOnChange = debounce((text) => setSearchTerm(text), 300);
+  const handleOnChange = debounce((text) => {
+    const apiKey = apiRef.current.value;
+    setSearchTerm(text);
+    if (apiKey !== '' && text !== '') {
+      fetch(`http://www.omdbapi.com/?s=${text}&apiKey=${apiKey}`)
+        .then((res) => {
+          if (!res.ok) {
+            throw new Error('Could not fetch results');
+          } else {
+            return res.json();
+          }
+        })
+        .then((data) => {
+          console.log('data:', data);
+          setResults(data);
+        })
+        .catch((_err) => {
+          console.log(
+            "Handle error here (shouldn't reach here for this project)"
+          );
+        });
+    }
+  }, 300);
+
+  const addNomination = (movie) => {
+    const { imdbID: id } = movie;
+
+    if (!nominatedIds.includes(id)) {
+      setNominatedIds([...nominatedIds, id]);
+      setNominations([...nominations, movie]);
+    }
+  };
+
+  const removeNomination = (selectedMovie) => {
+    const updatedNominatedIds = nominatedIds.filter(
+      (id) => id !== selectedMovie.imdbID
+    );
+
+    const updatedNominations = nominations.filter(
+      (movie) => movie.imdbID !== selectedMovie.imdbID
+    );
+
+    setNominatedIds(updatedNominatedIds);
+    setNominations(updatedNominations);
+  };
 
   return (
     <>
@@ -81,9 +130,9 @@ const MainPage = () => {
           <InputItem>
             <div>Search:</div>
             <input
-              placeholder='search ...'
+              placeholder='eg. Home Alone'
               onChange={(e) => {
-                // e.persist();
+                e.persist();
                 handleOnChange(e.target.value);
               }}
             />
@@ -91,21 +140,25 @@ const MainPage = () => {
         </SearchContainer>
         <ContentContainer>
           <ContentWrapper
-            apiKey={apiRef?.current?.value}
-            title={'Results'}
-            maxWidth={'60%'}
-            searchTerm={searchTerm}>
-            hello world
+            title={`Results${searchTerm && ` for "${searchTerm}"`}:`}
+            maxWidth={'60%'}>
+            <MovieResults
+              movies={results.Search}
+              nominatedIds={nominatedIds}
+              handleNomination={(selectedMovie) => addNomination(selectedMovie)}
+            />
           </ContentWrapper>
           <ContentWrapper
-            apiKey={apiRef?.current?.value}
-            title={`Nomination (${nominations.length} / 5)`}
-            maxWidth={'37%'}
-            searchTerm={searchTerm}>
-            hello world
+            title={`Nomination (${nominations.length} / 5):`}
+            maxWidth={'37%'}>
+            <Nominations
+              nominations={nominations}
+              removeNomination={(selectedMovie) =>
+                removeNomination(selectedMovie)
+              }
+            />
           </ContentWrapper>
         </ContentContainer>
-        <div>{searchTerm}</div>
       </MainContent>
     </>
   );
