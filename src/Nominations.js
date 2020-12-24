@@ -7,6 +7,7 @@ const NominationsWrapper = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 35px;
+  width: 100%;
 `;
 
 const NominationItem = styled.div`
