@@ -26,8 +26,8 @@ export const fetchMovies = (apiKey, searchTerm, setResults) => {
     })
     .then((data) => {
       setResults(data);
-      return Promise.all(
-        data.Search.map(async (movie) => {
+      return data?.Search && Promise.all(
+        data?.Search?.map(async (movie) => {
           const { imdbID: id } = movie;
           const details = await fetchDetailsById(apiKey, id);
           return details;

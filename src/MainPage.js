@@ -136,7 +136,7 @@ const MainPage = () => {
 
   useEffect(() => {
     if (results && results?.Search?.length === resultDetails?.length) {
-      const formatted = resultDetails.reduce(
+      const formatted = resultDetails?.reduce(
         (obj, item) => Object.assign(obj, { [item.imdbID]: item }),
         {}
       );
