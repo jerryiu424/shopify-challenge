@@ -1,17 +1,24 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState } from 'react';
 import styled from 'styled-components';
 import { debounce } from 'debounce';
 import Confetti from 'react-dom-confetti';
 
+import { fetchMovies } from './utility';
+
 import CompletionBanner from './CompletionBanner';
 import ContentWrapper from './ContentWrapper';
 import MovieResults from './MovieResults';
+import MobileNominationSlider from './MobileNominationSlider';
 import Nominations from './Nominations';
 
 const Title = styled.div`
   font-size: 50px;
   font-weight: 700;
   margin-bottom: 15px;
+
+  @media (max-width: 375px) {
+    font-size: 30px;
+  }
 `;
 
 const BannerContainer = styled.div`
@@ -19,6 +26,9 @@ const BannerContainer = styled.div`
   margin: 0 auto;
   width: 80%;
   margin-bottom: 15px;
+  @media (max-width: 375px) {
+    width: 100%;
+  }
 `;
 
 const MainContent = styled.div`
@@ -26,17 +36,33 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   padding-left: 20px;
+  @media (max-width: 375px) {
+    padding: 0;
+  }
 `;
 
 const SearchContainer = styled.div`
-  margin-bottom: 35px;
+  margin-bottom: 5px;
   width: 60%;
+  @media (max-width: 375px) {
+    width: 100%;
+  }
 `;
 
 const ContentContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
+
+  @media (max-width: 375px) {
+    & > * {
+      width: 100%;
+    }
+
+    & > *:nth-child(2) {
+      display: none;
+    }
+  }
 `;
 
 const InputItem = styled.div`
@@ -71,11 +97,12 @@ const InputItem = styled.div`
   @media (max-width: 375px) {
     flex-direction: column;
     align-items: flex-start;
-    width: 85%;
+    width: 100%;
     margin-left: 0;
 
     & > div {
       margin-bottom: 5px;
+      font-size: 16px;
     }
   }
 `;
@@ -91,6 +118,7 @@ const MainPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [activateConfetti, SetActivateConfetti] = useState(false);
   const [results, setResults] = useState([]);
+  const [resultDetails, setResultDetails] = useState([]);
   const [nominations, setNominations] = useState([]);
   const [nominatedIds, setNominatedIds] = useState([]);
 
@@ -98,30 +126,34 @@ const MainPage = () => {
     if (nominations.length === 5) {
       SetActivateConfetti(true);
     }
+  }, [nominations]);
+
+  useEffect(() => {
     if (activateConfetti) {
       SetActivateConfetti(false);
     }
-  }, [nominations]);
+  }, [activateConfetti]);
+
+  useEffect(() => {
+    if (results && results?.Search?.length === resultDetails?.length) {
+      const formatted = resultDetails.reduce(
+        (obj, item) => Object.assign(obj, { [item.imdbID]: item }),
+        {}
+      );
+      setResultDetails(formatted);
+    }
+  }, [results, resultDetails]);
+
+  const emptyResultMessage = searchTerm
+    ? 'Oh no! The results look empty. Please try another search term'
+    : 'You can start searching by typing into the search box!';
 
   const handleOnChange = debounce((text) => {
     setSearchTerm(text);
     if (apiKey !== '' && text !== '') {
-      fetch(`https://www.omdbapi.com/?s=${text}&apiKey=${apiKey}`)
-        .then((res) => {
-          if (!res.ok) {
-            throw new Error('Could not fetch results');
-          } else {
-            return res.json();
-          }
-        })
-        .then((data) => {
-          setResults(data);
-        })
-        .catch((_err) => {
-          console.log(
-            "Handle error here (shouldn't reach here for this project)"
-          );
-        });
+      fetchMovies(apiKey, text, (res) => setResults(res)).then((resDetails) =>
+        setResultDetails(resDetails)
+      );
     }
     if (text === '') {
       setResults([]);
@@ -150,13 +182,9 @@ const MainPage = () => {
     setNominations(updatedNominations);
   };
 
-  const emptyResultMessage = searchTerm
-    ? 'Oh no! The results look empty. Please try another search term'
-    : 'You can start searching by typing into the search box!';
-
   return (
     <>
-      <Title>Movie Finder</Title>
+      <Title>The Shoppies</Title>
       <ConfettiContainer>
         <Confetti
           active={activateConfetti}
@@ -167,11 +195,11 @@ const MainPage = () => {
           }}
         />
       </ConfettiContainer>
-      {nominations.length === 5 && (
-        <BannerContainer>
-          <CompletionBanner />
-        </BannerContainer>
-      )}
+
+      <MobileNominationSlider
+        nominations={nominations}
+        removeNomination={removeNomination}
+      />
       <MainContent>
         <SearchContainer>
           <InputItem emptyApi={apiKey === ''}>
@@ -193,6 +221,11 @@ const MainPage = () => {
             />
           </InputItem>
         </SearchContainer>
+        {nominations.length === 5 && (
+          <BannerContainer>
+            <CompletionBanner />
+          </BannerContainer>
+        )}
         <ContentContainer>
           <ContentWrapper
             title={`Results${searchTerm && ` for "${searchTerm}"`}:`}
@@ -201,6 +234,7 @@ const MainPage = () => {
             {results.Search ? (
               <MovieResults
                 movies={results.Search}
+                moviesDetails={resultDetails}
                 nominatedIds={nominatedIds}
                 handleNomination={(selectedMovie) =>
                   addNomination(selectedMovie)
@@ -211,6 +245,7 @@ const MainPage = () => {
             )}
           </ContentWrapper>
           <ContentWrapper
+            className='hello'
             title={`Nomination (${nominations.length} / 5):`}
             maxWidth={'37%'}>
             <Nominations

@@ -8,7 +8,8 @@ body {
     #4bdfff 0%,
     rgba(228, 73, 253, 0.25) 100%
   );
-  height: 100vh;
+  height: auto;
+  min-height: 100vh;
   overflow: auto;
 }
 

@@ -2,7 +2,6 @@ import React from 'react';
 import styled from 'styled-components';
 
 const Banner = styled.div`
-  // background-color: rgba(255, 255, 255, 0.95);
   background-color: #ffffff;
   padding: 10px 0px;
   border-radius: 4px;
@@ -13,6 +12,9 @@ const Banner = styled.div`
   width: 100%;
   font-size: 24px;
   font-weight: bold;
+  @media (max-width: 375px) {
+    font-size: 16px;
+  }
 `;
 
 const CompletionBanner = () => {

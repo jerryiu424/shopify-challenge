@@ -8,6 +8,12 @@ const NominationsWrapper = styled.div`
   flex-direction: column;
   margin-top: 35px;
   width: 100%;
+
+  @media (max-width: 375px) {
+    & > *:nth-child(5) {
+      margin-bottom: 0;
+    }
+  }
 `;
 
 const NominationItem = styled.div`
@@ -41,6 +47,7 @@ const Nominations = ({ nominations, removeNomination }) => {
             </div>
             <TrashIcon
               src={trashIcon}
+              alt='Remove nomination icon'
               onClick={() => removeNomination(movie)}
             />
           </NominationItem>

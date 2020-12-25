@@ -7,9 +7,19 @@ const ResultsWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   flex-wrap: wrap;
+
+  @media (max-width: 1090px) {
+    flex-direction: column;
+    width: 100%;
+  }
 `;
 
-const MovieResults = ({ movies, nominatedIds, handleNomination }) => {
+const MovieResults = ({
+  movies,
+  moviesDetails,
+  nominatedIds,
+  handleNomination,
+}) => {
   return (
     <ResultsWrapper>
       {movies?.map((movie, idx) => {
@@ -17,6 +27,7 @@ const MovieResults = ({ movies, nominatedIds, handleNomination }) => {
           <MovieCard
             key={idx}
             movie={movie}
+            movieDetails={moviesDetails[movie.imdbID]}
             nominatedIds={nominatedIds}
             handleNomination={(selectedMovie) =>
               handleNomination(selectedMovie)
