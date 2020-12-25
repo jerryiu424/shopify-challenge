@@ -158,7 +158,7 @@ const MainPage = () => {
     if (text === '') {
       setResults([]);
     }
-  }, 300);
+  }, 1000);
 
   const addNomination = (movie) => {
     const { imdbID: id } = movie;
