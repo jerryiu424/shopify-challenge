@@ -28,8 +28,8 @@ export const fetchMovies = (apiKey, searchTerm, setResults) => {
       setResults(data);
       return data?.Search && Promise.all(
         data?.Search?.map(async (movie) => {
-          const { imdbID: id } = movie;
-          const details = await fetchDetailsById(apiKey, id);
+          const { imdbID: id = null } = movie;
+          const details = id && await fetchDetailsById(apiKey, id);
           return details;
         })
       );

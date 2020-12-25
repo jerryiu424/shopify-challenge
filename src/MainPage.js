@@ -134,16 +134,6 @@ const MainPage = () => {
     }
   }, [activateConfetti]);
 
-  useEffect(() => {
-    if (results && results?.Search?.length === resultDetails?.length) {
-      const formatted = resultDetails && resultDetails.reduce(
-        (obj, item) => Object.assign(obj, { [item.imdbID]: item }),
-        {}
-      );
-      setResultDetails(formatted);
-    }
-  }, [results, resultDetails]);
-
   const emptyResultMessage = searchTerm
     ? 'Oh no! The results look empty. Please try another search term'
     : 'You can start searching by typing into the search box!';
