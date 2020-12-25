@@ -27,7 +27,7 @@ const MovieResults = ({
           <MovieCard
             key={idx}
             movie={movie}
-            movieDetails={moviesDetails[movie.imdbID]}
+            movieDetails={moviesDetails && moviesDetails[movie.imdbID]}
             nominatedIds={nominatedIds}
             handleNomination={(selectedMovie) =>
               handleNomination(selectedMovie)
