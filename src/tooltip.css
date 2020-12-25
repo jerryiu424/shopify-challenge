@@ -1,0 +1,7 @@
+.rc-tooltip-inner {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  max-width: 75px;
+  text-align: center;
+}
