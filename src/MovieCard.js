@@ -1,6 +1,7 @@
 import React from 'react';
 import styled from 'styled-components';
 
+import posterError from './assets/poster-error.png';
 import './animation.css';
 
 const CardWrapper = styled.div`
@@ -80,7 +81,7 @@ const MovieCard = ({
     Rated: rated = null,
   } = movieDetails;
   const isNominated = nominatedIds.includes(id);
-  const disableAll = nominatedIds.length === 5;
+  const disableAll = nominatedIds.length >= 5;
 
   return (
     <CardWrapper>
@@ -93,7 +94,7 @@ const MovieCard = ({
         <div className='flipper'>
           <div className='front'>
             <img
-              src={imgUrl}
+              src={(imgUrl !== "N/A"  && imgUrl) || posterError}
               style={{ width: '100%', height: '100%' }}
               alt='Movie poster'
             />
@@ -132,7 +133,9 @@ const MovieCard = ({
         <NominateButton
           disabled={isNominated || disableAll}
           onClick={() => {
-            handleNomination(movie);
+            if (nominatedIds.length < 5) {
+              handleNomination(movie);
+            }
           }}>
           Nominate
         </NominateButton>

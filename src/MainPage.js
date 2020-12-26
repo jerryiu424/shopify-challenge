@@ -113,6 +113,23 @@ const ConfettiContainer = styled.div`
   right: 50%;
 `;
 
+const updateBackgroundColor = (nominations) => {
+  switch (nominations.length) {
+    case 1:
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.25) 100%)';
+    case 2:
+      return 'linear-gradient(180deg,#ff70a6 0%,rgba(255, 151, 112, 0.25) 100%)';
+    case 3:
+      return 'linear-gradient(180deg,#ff9770 0%,rgba(255, 214, 112, 0.25) 100%)';
+    case 4:
+      return 'linear-gradient(180deg,#ffd670 0%,rgba(233, 255, 112, 0.25) 100%)';
+    case 5:
+      return 'linear-gradient(180deg,#e9ff70 0%,rgba(112, 214, 255, 0.25) 100%)';
+    default:
+      return 'linear-gradient(180deg,#4bdfff 0%,rgba(112, 214, 255, 0.25) 100%)';
+  }
+};
+
 const MainPage = () => {
   const [apiKey, setApiKey] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -121,6 +138,8 @@ const MainPage = () => {
   const [resultDetails, setResultDetails] = useState([]);
   const [nominations, setNominations] = useState([]);
   const [nominatedIds, setNominatedIds] = useState([]);
+
+  document.body.style.background = updateBackgroundColor(nominations);
 
   useEffect(() => {
     if (nominations.length === 5) {
