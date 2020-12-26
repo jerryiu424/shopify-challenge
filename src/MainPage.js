@@ -116,17 +116,17 @@ const ConfettiContainer = styled.div`
 const updateBackgroundColor = (nominations) => {
   switch (nominations.length) {
     case 1:
-      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.20) 100%)';
     case 2:
-      return 'linear-gradient(180deg,#ff70a6 0%,rgba(255, 151, 112, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.40) 100%)';
     case 3:
-      return 'linear-gradient(180deg,#ff9770 0%,rgba(255, 214, 112, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.60) 100%)';
     case 4:
-      return 'linear-gradient(180deg,#ffd670 0%,rgba(233, 255, 112, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.80) 100%)';
     case 5:
-      return 'linear-gradient(180deg,#e9ff70 0%,rgba(112, 214, 255, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 1) 100%)';
     default:
-      return 'linear-gradient(180deg,#4bdfff 0%,rgba(112, 214, 255, 0.25) 100%)';
+      return 'linear-gradient(180deg,#70d6ff 0%,rgba(255, 112, 166, 0.1) 100%)';
   }
 };
 
