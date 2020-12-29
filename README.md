@@ -2,7 +2,12 @@
 
 ## **App**: http://jerryiushopify.netlify.app/
 
-## Getting Started
+## Additional features:
+- Mobile Responsiveness 
+- Saving nominations to local storage
+- Saves up to 5 nominations
+
+## Getting started
 ### Requirement
 - Node
 - NPM
