@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { debounce } from 'debounce';
 import Confetti from 'react-dom-confetti';
 
-import { fetchMovies } from './utility';
+import { fetchMovies, setLocalStorage, getLocalStorage } from './utility';
 
 import CompletionBanner from './CompletionBanner';
 import ContentWrapper from './ContentWrapper';
@@ -142,6 +142,16 @@ const MainPage = () => {
   document.body.style.background = updateBackgroundColor(nominations);
 
   useEffect(() => {
+    if (
+      localStorage.getItem('nominations') &&
+      localStorage.getItem('nominationIds')
+    ) {
+      setNominations(getLocalStorage('nominations'));
+      setNominatedIds(getLocalStorage('nominationIds'));
+    }
+  }, []);
+
+  useEffect(() => {
     if (nominations.length === 5) {
       SetActivateConfetti(true);
     }
@@ -173,6 +183,8 @@ const MainPage = () => {
     const { imdbID: id } = movie;
 
     if (!nominatedIds.includes(id)) {
+      setLocalStorage('nominationIds', [...nominatedIds, id]);
+      setLocalStorage('nominations', [...nominations, movie]);
       setNominatedIds([...nominatedIds, id]);
       setNominations([...nominations, movie]);
     }
@@ -189,6 +201,8 @@ const MainPage = () => {
 
     setNominatedIds(updatedNominatedIds);
     setNominations(updatedNominations);
+    setLocalStorage('nominationIds', updatedNominatedIds);
+    setLocalStorage('nominations', updatedNominations);
   };
 
   return (

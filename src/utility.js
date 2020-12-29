@@ -26,15 +26,26 @@ export const fetchMovies = (apiKey, searchTerm, setResults) => {
     })
     .then((data) => {
       setResults(data);
-      return data?.Search && Promise.all(
-        data?.Search?.map(async (movie) => {
-          const { imdbID: id = null } = movie;
-          const details = id && await fetchDetailsById(apiKey, id);
-          return details;
-        })
+      return (
+        data?.Search &&
+        Promise.all(
+          data?.Search?.map(async (movie) => {
+            const { imdbID: id = null } = movie;
+            const details = id && (await fetchDetailsById(apiKey, id));
+            return details;
+          })
+        )
       );
     })
     .catch((err) => {
       console.log(err);
     });
+};
+
+export const setLocalStorage = (key, val) => {
+  localStorage.setItem(key, JSON.stringify(val));
+};
+
+export const getLocalStorage = (key) => {
+  return JSON.parse(localStorage.getItem(key));
 };
